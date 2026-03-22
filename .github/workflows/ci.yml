@@ -7,15 +7,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - run: echo "Hello, DevOps!"
-
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
-        with: 
+        with:
           java-version: 17
           distribution: "temurin"
 
@@ -25,13 +22,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }} .
 
-
-      - name: push to docker hub
-        env: 
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PASS: ${{secrets.DOCKER_PASS}}
+      - name: Push to Docker Hub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
         run: |
-          echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin "$DOCKER_PASS"
-          docker push myapp:${{github.sha }}
-          docker tag ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }} ${{ secrets.DOCKER_USER }}/myapp:latest
-          docker push ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }}
+          echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+          docker push $DOCKER_USER/myapp:${{ github.sha }}
+          docker tag $DOCKER_USER/myapp:${{ github.sha }} $DOCKER_USER/myapp:latest
+          docker push $DOCKER_USER/myapp:latest
