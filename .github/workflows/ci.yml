@@ -30,7 +30,7 @@ jobs:
           DOCKER_USER: ${{secrets.DOCKER_USER}}
           DOCKER_PASS: ${{secrets.DOCKER_PASS}}
         run: |
-          echo "$DOCKER_PASS" | docker login -u"$DOCKER_USER" --password-stdin
+          echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
           docker push myapp:${{github.sha }}
           docker tagmy app:${{github.sha }} myapp:latest
           docker push myapp:latest
