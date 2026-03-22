@@ -23,7 +23,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Build Docker image
-        run: docker build -t myapp:${{github.sha}}
+        run: docker build -t myapp:${{github.sha}} .
 
       - name: push to docker hub
         env: 
