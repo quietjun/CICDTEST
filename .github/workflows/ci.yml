@@ -21,4 +21,17 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
+      - name: Build Docker image
+        run: docker build -t myapp:${{github.sha}}
+
+      - name: push to docker hub
+        env: 
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASS: ${{secrets.DOCKER_PASS}}
+        run: |
+          echo"$DOCKER_PASS"|dockerlogin-u"$DOCKER_USER"--password-stdin
+          dockerpushmyapp:${{github.sha }}
+          dockertagmyapp:${{github.sha }} myapp:latest
+          dockerpushmyapp:latest
           
