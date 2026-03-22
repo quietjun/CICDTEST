@@ -23,7 +23,8 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Build Docker image
-        run: docker build -t myapp:${{github.sha}} .
+        run: docker build -t ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }} .
+
 
       - name: push to docker hub
         env: 
@@ -32,6 +33,6 @@ jobs:
         run: |
           echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
           docker push myapp:${{github.sha }}
-          docker tagmy app:${{github.sha }} myapp:latest
-          docker push myapp:latest
+          docker tag ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }} ${{ secrets.DOCKER_USER }}/myapp:latest
+          docker push ${{ secrets.DOCKER_USER }}/myapp:${{ github.sha }}
           
